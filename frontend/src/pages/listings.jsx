@@ -16,9 +16,12 @@ export default function Listings() {
   }, []);
 
   const filtered =
-    filter === 'ALL'
-      ? listings
-      : listings.filter(l => l.type === filter);
+  filter === 'ALL'
+    ? listings
+    : listings.filter(
+        l => l.type?.toUpperCase() === filter
+      );
+
 
   return (
     <div style={{ padding: 40 }}>
