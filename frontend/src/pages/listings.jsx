@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { fetchResources } from '../services/api';
-import FilterBar from '../components/filterbar';
-import ListingCard from '../components/listingcard';
+import FilterBar from '../components/FilterBar';
+import ListingCard from '../components/ListingCard';
+import Booking from './booking';
 import { supabase } from '../auth/supabase';
 
 export default function Listings() {
   const [listings, setListings] = useState([]);
   const [filter, setFilter] = useState('ALL');
   const [error, setError] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     fetchResources()
@@ -15,6 +17,9 @@ export default function Listings() {
       .catch(err => setError(err.message));
   }, []);
 
+   if (selected) {
+    return <Booking resource={selected} />;
+  }
   const filtered =
   filter === 'ALL'
     ? listings
@@ -35,7 +40,7 @@ export default function Listings() {
         <ListingCard
           key={l.id}
           listing={l}
-          onSelect={() => alert('Next step')}
+          onSelect={setSelected}
         />
       ))}
 
