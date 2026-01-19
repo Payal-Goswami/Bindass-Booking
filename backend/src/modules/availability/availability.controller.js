@@ -1,6 +1,7 @@
 import { getBookingsForDay } from './availability.repository.js';
 import { computeAvailability } from './availability.service.js';
 import { generateSlots } from './slot.js';
+
 export async function getAvailability(req, res, next) {
   try { //use the date format YYYY-MM-DD in req object
 
