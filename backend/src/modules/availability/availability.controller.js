@@ -8,6 +8,9 @@ export async function getAvailability(req, res, next) {
    const { resourceId } = req.params;
    const { date } = req. query;
 
+   console.log("DATE : ", date);
+   console.log("resourceId : ", resourceId);
+   
 
     if (!resourceId || !date) {
       return res.status(400).json({

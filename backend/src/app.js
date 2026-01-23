@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/bookings', bookingRoutes);
-app.use('/availability', availabilityRoutes);
+// app.use('/availability', availabilityRoutes);
 app.use('/resources', resourceRoutes);
 app.use('/cancel', cancelRoutes);
 app.use('/admin/resources', addResourceRoutes);
