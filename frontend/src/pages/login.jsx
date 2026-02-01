@@ -1,54 +1,59 @@
 import { useState } from 'react';
-import { supabase } from '../auth/supabase';
+import { useNavigate, Link } from 'react-router-dom';
+import { login } from '../auth/auth.api';
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(null);
 
-    if (error) setError(error.message);
-  };
-
-  const handleSignup = async () => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password
-    });
-
-    if (error) setError(error.message);
-  };
+    try {
+      await login(email, password);
+      navigate('/');
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return (
-    <div style={{ padding: 40 }}>
-      <h2>Login / Signup</h2>
+    <div style={{ maxWidth: 400, margin: '80px auto' }}>
+      <h2>Login</h2>
 
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value.trim())}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          required
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          style={{ width: '100%', marginBottom: 10 }}
+        />
 
-      <br />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          style={{ width: '100%', marginBottom: 10 }}
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value.trim())}
-      />
-
-      <br />
-
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={handleSignup}>Signup</button>
+        <button type="submit" style={{ width: '100%' }}>
+          Login
+        </button>
+      </form>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <p style={{ marginTop: 10 }}>
+        Don’t have an account? <Link to="/signup">Signup</Link>
+      </p>
     </div>
   );
 }
