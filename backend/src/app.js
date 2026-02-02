@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import bookingRoutes from './modules/bookings/booking.routes.js';
-import availabilityRoutes from './modules/availability/availability.routes.js';
 import resourceRoutes from './modules/resources/resource.routes.js';
 import cancelRoutes from './modules/cancelBooking/cancelBooking.routes.js';
 import userBookingRoutes from './modules/userBooking/userBooking.routes.js';
