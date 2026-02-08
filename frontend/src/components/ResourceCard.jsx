@@ -18,7 +18,7 @@ export default function ResourceCard({ resource }) {
       <h3>{resource.name}</h3>
       <p>Type: {resource.type}</p>
       <p>Capacity: {resource.capacity}</p>
-      <p>description: {resource.description}</p>
+      <p>Description: {resource.description}</p>
 
       <button
         onClick={() => navigate(`/resources/${resource.id}`)}
