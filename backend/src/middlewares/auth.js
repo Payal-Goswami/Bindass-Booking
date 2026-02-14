@@ -16,25 +16,46 @@ export const authenticate = async (req, res, next) => {
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
     if (error || !user) {
-       return res.status(401).json({ error: "Invalid or expired token" });
+       return res.status(401).json({ error: "Invalid or expired token : User not registered" });
     }
 
       const { data: dbUser, error: dbError } = await supabase
       .from('users')
       .select('id, role')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (dbError || !dbUser) {
-      return res.status(403).json({ error: "User not registered" });
+      if (dbError) {
+      return res.status(403).json({ error: "Failed to login:(" });
     }
 
-    req.user = {
-      id: dbUser.id,
-      role: dbUser.role,
-      email: user.email
-    };
+      let finalUser = dbUser;
 
+if (!dbUser) {
+  const { data: insertedUser, error: insertError } = await supabase
+    .from('users')
+    .insert({
+      id: user.id,
+      email: user.email,
+      role: 'USER' 
+    })
+    .select()
+    .single();
+
+  if (insertError) {
+    return res.status(500).json({ error: "Failed to login:(" });
+  }
+
+  finalUser = insertedUser;
+}
+
+    
+
+    req.user = {
+      id: finalUser.id,
+      role: finalUser.role,
+      email: finalUser.email
+    };
     next();
   } catch (err) {
     next(err);
