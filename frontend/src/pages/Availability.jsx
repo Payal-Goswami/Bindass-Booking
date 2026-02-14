@@ -1,15 +1,16 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { fetchAvailability } from '../services/availability.api';
-import { createBooking } from '../services/booking.api';
-import { generateDaySlotsUTC, isSlotFree } from '../utils/slots';
-import SlotGrid from '../components/SlotGrid';
-import { supabase } from '../auth/supabase';
-
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchAvailability } from "../services/availability.api";
+import { createBooking } from "../services/booking.api";
+import { generateDaySlotsUTC, isSlotFree } from "../utils/slots";
+import SlotGrid from "../components/SlotGrid";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../auth/supabase";
+import "../styles/Availability.css";
 export default function Availability() {
   const { resourceId } = useParams();
-
-  const [date, setDate] = useState('');
+  const navigate = useNavigate();
+  const [date, setDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,22 +23,27 @@ export default function Availability() {
     setSelectedSlots([]);
 
     fetchAvailability(resourceId, date)
-      .then(freeSlots => {
+      .then((freeSlots) => {
         const daySlots = generateDaySlotsUTC(date);
+        const now = new Date();
 
         setSlots(
-          daySlots.map(slot => ({
-            ...slot,
-            free: isSlotFree(slot, freeSlots),
-            selected: false,
-            label: `${slot.start.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit'
-            })} - ${slot.end.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit'
-            })}`
-          }))
+          daySlots.map((slot) => {
+            const isPast = slot.end < now;
+
+            return {
+              ...slot,
+              free: isPast ? false : isSlotFree(slot, freeSlots),
+              selected: false,
+              label: `${slot.start.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })} - ${slot.end.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}`,
+            };
+          }),
         );
       })
       .finally(() => setLoading(false));
@@ -46,88 +52,103 @@ export default function Availability() {
   function handleSelect(slot) {
     if (!slot.free) return;
 
-    const updated = [...selectedSlots, slot].sort(
-      (a, b) => a.start - b.start
+    let updated;
+
+    const exists = selectedSlots.some(
+      (s) => s.start.getTime() === slot.start.getTime(),
     );
 
-    // Ensure continuity
-    for (let i = 1; i < updated.length; i++) {
-      if (updated[i - 1].end.getTime() !== updated[i].start.getTime()) {
-        return;
-      }
+    if (exists) {
+      updated = selectedSlots.filter(
+        (s) => s.start.getTime() !== slot.start.getTime(),
+      );
+    } else {
+      updated = [...selectedSlots, slot];
     }
 
     setSelectedSlots(updated);
 
-    setSlots(slots =>
-      slots.map(s => ({
+    setSlots((prev) =>
+      prev.map((s) => ({
         ...s,
-        selected: updated.some(u => u.start.getTime() === s.start.getTime())
-      }))
+        selected: updated.some((u) => u.start.getTime() === s.start.getTime()),
+      })),
     );
   }
-
   async function handleBooking() {
     try {
-        const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
 
-        if (!data.session) {
-          setMessage({
-            type: 'error',
-            text: 'Please login to book slots'
-          });
-          return;
-        }
+      if (!data.session) {
+        setMessage({
+          type: "error",
+          text: "Please login to book slots",
+        });
+        return;
+      }
 
-        const token = data.session.access_token;
+      const token = data.session.access_token;
 
+      for (const slot of selectedSlots) {
+        await createBooking({
+          resourceId,
+          startTime: slot.start.toISOString(),
+          endTime: slot.end.toISOString(),
+          token,
+        });
+      }
 
-      await createBooking({
-        resourceId,
-        startTime: selectedSlots[0].start.toISOString(),
-        endTime: selectedSlots[selectedSlots.length - 1].end.toISOString(),
-        token
+      setMessage({
+        type: "success",
+        text: "Booking confirmed 🎉 Redirecting to My Bookings...",
       });
 
-      setMessage({ type: 'success', text: 'Booking confirmed 🎉' });
-      setDate(date); 
+      setTimeout(() => {
+        navigate("/my-bookings");
+      }, 2000);
     } catch (err) {
-      setMessage({ type: 'error', text: err.message });
+      setMessage({ type: "error", text: err.message });
     }
   }
 
+  const today = new Date().toISOString().split("T")[0];
+
   return (
-    <>
-      <h2>Availability</h2>
+    <div className="availability-container">
+      <div className="availability-card">
+        <div className="availability-header">
+          <h2 className="availability-title">Choose Your Slot</h2>
 
-      <input
-        type="date"
-        value={date}
-        onChange={e => setDate(e.target.value)}
-      />
-
-      {message && (
-        <p style={{ color: message.type === 'success' ? 'green' : 'red' }}>
-          {message.text}
-        </p>
-      )}
-
-      {loading && <p>Loading slots...</p>}
-
-      {!loading && slots.length > 0 && (
-        <>
-          <SlotGrid slots={slots} onSelect={handleSelect} />
-
-          {selectedSlots.length > 0 && (
-            <button
-              onClick={handleBooking}
-              style={{ marginTop: 20, padding: '10px 20px' }}
+          <input
+            type="date"
+            value={date}
+            min={today}
+            onChange={(e) => setDate(e.target.value)}
+            className="date-input"
+          />
+        </div>
+        {message && (
+          <div className="message-overlay">
+            <div
+              className={
+                message.type === "success" ? "message-success" : "message-error"
+              }
             >
-              Book Selected Slots
-            </button>
-          )}
-        </>
-      )}
-    </>
+              {message.text}
+            </div>
+          </div>
+        )}
+
+        <div className="slot-section">
+          <SlotGrid slots={slots} onSelect={handleSelect} />
+        </div>
+
+        {selectedSlots.length > 0 && (
+          <button onClick={handleBooking} className="book-button">
+            Book Selected Slots
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
