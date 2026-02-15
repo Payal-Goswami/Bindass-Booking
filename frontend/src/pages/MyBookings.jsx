@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../auth/supabase';
-import { fetchMyBookings, cancelBooking } from '../services/myBookings.api';
+import { useEffect, useState } from "react";
+import { supabase } from "../auth/supabase";
+import { fetchMyBookings, cancelBooking } from "../services/myBookings.api";
+import "../styles/MyBookings.css";
 
 export default function MyBookings() {
   const [bookings, setBookings] = useState([]);
@@ -12,10 +13,10 @@ export default function MyBookings() {
 
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
-       console.log("No session yet, please wait...");
-      //  setLoading(false);
-       return;
+      console.log("No session yet, please wait...");
+      return;
     }
+
     const token = data.session.access_token;
     const result = await fetchMyBookings(token);
 
@@ -27,65 +28,83 @@ export default function MyBookings() {
     loadBookings();
   }, []);
 
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [message]);
+
   async function handleCancel(id) {
-    if (!window.confirm('Cancel this booking?')) return;
+    if (!window.confirm("Cancel this booking?")) return;
 
     try {
       const { data } = await supabase.auth.getSession();
       const token = data.session.access_token;
-
       await cancelBooking(id, token);
-      setMessage('Booking cancelled successfully');
+
+      setMessage("Booking cancelled successfully");
       loadBookings();
     } catch (err) {
-      setMessage('Failed to cancel booking:(');
+      setMessage("Failed to cancel booking");
     }
   }
 
-  if (loading) return <p>Loading bookings...</p>;
+  if (loading) return <p style={{ padding: 20 }}>Loading bookings...</p>;
 
   return (
-    <div style={{ padding: 40 }}>
-      <h2>My Bookings</h2>
+    <div className="mybookings-container">
+      <div className="mybookings-wrapper">
+        <h2 className="mybookings-title">My Bookings</h2>
 
-      {message && <p style={{ color: 'green' }}>{message}</p>}
+        {message && (
+          <div
+            className={
+              message.includes("Failed")
+                ? "booking-message error"
+                : "booking-message success"
+            }
+          >
+            {message}
+          </div>
+        )}
 
-      {bookings.length === 0 && <p>No bookings yet</p>}
+        {bookings.length === 0 && (
+          <p style={{ color: "#64748b" }}>No bookings yet</p>
+        )}
 
-      {bookings.map(b => (
-        <div
-          key={b.id}
-          style={{
-            padding: 15,
-            marginBottom: 15,
-            border: '1px solid #ddd',
-            borderRadius: 6
-          }}
-        >
-          <b>{b.resources?.name}</b>
+        {bookings.map((b) => (
+          <div key={b.id} className="booking-card">
+            <div className="booking-title">{b.resources?.name}</div>
 
-          <p>
-            {new Date(b.start_time).toLocaleDateString()} <br />
-            {new Date(b.start_time).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
-            {' - '}
-            {new Date(b.end_time).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
-          </p>
+            <div className="booking-time">
+              {new Date(b.start_time).toLocaleDateString()} <br />
+              {new Date(b.start_time).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              {" - "}
+              {new Date(b.end_time).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
 
-          <p>Status: <b>{b.status}</b></p>
+            <span className="status-badge status-confirmed">{b.status}</span>
 
-          {b.status === 'CONFIRMED' && (
-            <button onClick={() => handleCancel(b.id)}>
-              Cancel
-            </button>
-          )}
-        </div>
-      ))}
+            {b.status === "CONFIRMED" && (
+              <button
+                className="cancel-button"
+                onClick={() => handleCancel(b.id)}
+              >
+                Cancel Booking
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

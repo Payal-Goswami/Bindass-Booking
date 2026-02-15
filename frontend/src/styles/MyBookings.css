@@ -1,0 +1,98 @@
+.mybookings-container {
+  min-height: 100svh;
+  padding: 35px 20px;
+  /* background:
+    radial-gradient(circle at top left, #e0f2fe, transparent 40%),
+    #f8fafc; */
+}
+
+.mybookings-wrapper {
+  max-width: 850px;
+  margin: auto;
+}
+
+.mybookings-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 22px;
+}
+
+.booking-message {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.booking-message.success {
+  background: #ecfeff;
+  color: #0e7490;
+  border-color: #a5f3fc;
+}
+
+.booking-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.booking-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+  transition: 0.2s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+}
+
+.booking-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e3a5f;  
+}
+
+.booking-time {
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.status-badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-confirmed {
+  background: #cffafe;
+  color: #0e7490;
+  margin: 12px 10px 0 0;
+}
+
+.cancel-button {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: 25px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-left: 10px ;
+}
+
+.cancel-button:hover {
+  background: #dc2626;
+}
