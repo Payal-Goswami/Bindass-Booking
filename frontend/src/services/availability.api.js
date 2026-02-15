@@ -1,4 +1,4 @@
-const API_URL = 'https://bindass-booking.onrender.com';
+const API_URL = import.meta.env.BASE_URL;
 
 export async function fetchAvailability(resourceId, date) {
   const res = await fetch(
