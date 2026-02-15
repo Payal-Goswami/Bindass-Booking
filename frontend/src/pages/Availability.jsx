@@ -80,12 +80,15 @@ export default function Availability() {
       const { data } = await supabase.auth.getSession();
 
       if (!data.session) {
-        setMessage({
-          type: "error",
-          text: "Please login to book slots",
-        });
-        return;
-      }
+  navigate("/login", {
+    state: {
+      message: "Please login to book slots",
+      redirectTo: `/availability/${resourceId}`,
+    },
+  });
+  return;
+}
+
 
       const token = data.session.access_token;
 
@@ -114,7 +117,6 @@ export default function Availability() {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="availability-container">
       <div className="availability-card">
         <div className="availability-header">
           <h2 className="availability-title">Choose Your Slot</h2>
@@ -138,17 +140,38 @@ export default function Availability() {
             </div>
           </div>
         )}
+        <div className="availability-layout">
 
-        <div className="slot-section">
-          <SlotGrid slots={slots} onSelect={handleSelect} />
+  <div className="slot-section">
+    <SlotGrid slots={slots} onSelect={handleSelect} />
+  </div>
+
+  <div className="booking-panel">
+    <h4>Booking Summary</h4>
+
+    {selectedSlots.length > 0 ? (
+      <>
+        <div className="booking-summary">
+          {selectedSlots[0].label} → 
+          {selectedSlots[selectedSlots.length - 1].label}
         </div>
 
-        {selectedSlots.length > 0 && (
-          <button onClick={handleBooking} className="book-button">
-            Book Selected Slots
-          </button>
-        )}
+        <button
+          onClick={handleBooking}
+          className="book-button"
+        >
+          Confirm Booking
+        </button>
+      </>
+    ) : (
+      <p className="booking-summary">
+        Select slots to book
+      </p>
+    )}
+  </div>
+
+</div>
+
       </div>
-    </div>
   );
 }

@@ -1,0 +1,148 @@
+body {
+  background:
+    radial-gradient(circle at top right, #e0f2fe, transparent 40%),
+    #f8fafc;
+}
+
+.availability-card {
+  max-width: 1100px;
+  margin: 30px auto;
+  background: white;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+.availability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.availability-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e3a5f; 
+}
+
+.date-input {
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #38bdf8;  
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+}
+
+
+.availability-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+.slot-section {
+  padding: 18px;
+  border-radius: 16px;
+  background: #f8fafc;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.booking-panel {
+  background: #f0f9ff; 
+  padding: 18px;
+  border-radius: 16px;
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+  border: 1px solid #bae6fd;
+}
+
+.booking-panel h4 {
+  font-size: 17px;
+  margin-bottom: 12px;
+  color: #1e3a5f;
+}
+
+.booking-summary {
+  font-size: 14px;
+  color: #0e7490;
+  margin-bottom: 16px;
+}
+
+.book-button {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #1e3a5f, #38bdf8);
+  color: white;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.book-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(56,189,248,0.35);
+}
+
+.message-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+}
+
+.message-success,
+.message-error {
+  padding: 18px 26px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 15px;
+  animation: popIn 0.3s ease;
+}
+
+.message-success {
+  background: #ecfeff;
+  color: #0e7490;
+}
+
+.message-error {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 900px) {
+  .availability-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-panel {
+    position: static;
+  }
+
+  .slot-section {
+    max-height: none;
+  }
+}
