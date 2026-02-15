@@ -80,16 +80,14 @@ export default function Availability() {
       const { data } = await supabase.auth.getSession();
 
       if (!data.session) {
-  navigate("/login", {
-    state: {
-      message: "Please login to book slots",
-      redirectTo: `/availability/${resourceId}`,
-    },
-  });
-  return;
-}
-
-
+        navigate("/login", {
+          state: {
+            message: "Please login to book slots",
+            redirectTo: `/availability/${resourceId}`,
+          },
+        });
+        return;
+      }
       const token = data.session.access_token;
 
       for (const slot of selectedSlots) {
@@ -117,61 +115,53 @@ export default function Availability() {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-      <div className="availability-card">
-        <div className="availability-header">
-          <h2 className="availability-title">Choose Your Slot</h2>
+    <div className="availability-card">
+      <div className="availability-header">
+        <h2 className="availability-title">Choose Your Slot</h2>
 
-          <input
-            type="date"
-            value={date}
-            min={today}
-            onChange={(e) => setDate(e.target.value)}
-            className="date-input"
-          />
-        </div>
-        {message && (
-          <div className="message-overlay">
-            <div
-              className={
-                message.type === "success" ? "message-success" : "message-error"
-              }
-            >
-              {message.text}
-            </div>
-          </div>
-        )}
-        <div className="availability-layout">
-
-  <div className="slot-section">
-    <SlotGrid slots={slots} onSelect={handleSelect} />
-  </div>
-
-  <div className="booking-panel">
-    <h4>Booking Summary</h4>
-
-    {selectedSlots.length > 0 ? (
-      <>
-        <div className="booking-summary">
-          {selectedSlots[0].label} → 
-          {selectedSlots[selectedSlots.length - 1].label}
-        </div>
-
-        <button
-          onClick={handleBooking}
-          className="book-button"
-        >
-          Confirm Booking
-        </button>
-      </>
-    ) : (
-      <p className="booking-summary">
-        Select slots to book
-      </p>
-    )}
-  </div>
-
-</div>
-
+        <input
+          type="date"
+          value={date}
+          min={today}
+          onChange={(e) => setDate(e.target.value)}
+          className="date-input"
+        />
       </div>
+      {message && (
+        <div className="message-overlay">
+          <div
+            className={
+              message.type === "success" ? "message-success" : "message-error"
+            }
+          >
+            {message.text}
+          </div>
+        </div>
+      )}
+      <div className="availability-layout">
+        <div className="slot-section">
+          <SlotGrid slots={slots} onSelect={handleSelect} />
+        </div>
+
+        <div className="booking-panel">
+          <h4>Booking Summary</h4>
+
+          {selectedSlots.length > 0 ? (
+            <>
+              <div className="booking-summary">
+                {selectedSlots[0].label} →
+                {selectedSlots[selectedSlots.length - 1].label}
+              </div>
+
+              <button onClick={handleBooking} className="book-button">
+                Confirm Booking
+              </button>
+            </>
+          ) : (
+            <p className="booking-summary">Select slots to book</p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
