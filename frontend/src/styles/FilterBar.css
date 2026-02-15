@@ -5,36 +5,28 @@
   margin-bottom: 28px;
 }
 
-/* Base button */
 .filter-button {
   padding: 9px 20px;
   border-radius: 999px;
   border: 1px solid #e2e8f0;
-
   background: white;
   color: #334155;
-
   font-size: 14px;
   font-weight: 500;
-
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
-/* Hover */
 .filter-button:hover {
   background: #e0f2fe;
   border-color: #38bdf8;
   color: #0f172a;
-
   transform: translateY(-1px);
 }
 
-/* Active */
 .filter-button.active {
   background: linear-gradient(135deg, #1e3a5f, #38bdf8);
   color: white;
   border: none;
-
   box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
 }
