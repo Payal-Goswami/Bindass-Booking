@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/service.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.90.1",
