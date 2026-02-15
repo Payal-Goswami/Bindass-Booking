@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://bindass-booking.onrender.com';
 
 export async function createBooking({ resourceId, startTime, endTime, token }) {
   const res = await fetch(`${API_URL}/bookings`, {

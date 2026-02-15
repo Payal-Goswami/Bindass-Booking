@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://bindass-booking.onrender.com';
 
 export async function fetchAvailability(resourceId, date) {
   const res = await fetch(
