@@ -63,7 +63,7 @@ export default function Navbar() {
           </div>
         ) : (
           <Link to="/login" className="navbar-link">
-            Login
+            Login/Register
           </Link>
         )}
       </div>
