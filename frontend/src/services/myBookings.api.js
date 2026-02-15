@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.BASE_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function fetchMyBookings(token) {
   const res = await fetch(`${API_URL}/userBookings/my`, {
