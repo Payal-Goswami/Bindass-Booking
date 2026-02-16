@@ -18,8 +18,8 @@ export async function getAvailability(req, res, next) {
       });
     }
 
-    const dayStart = new Date(`${date}T09:00:00`);
-    const dayEnd   = new Date(`${date}T18:00:00`);
+    const dayStart = new Date(`${date}T09:00:00Z`);
+    const dayEnd   = new Date(`${date}T18:00:00Z`);
 
 
     const bookings = await getBookingsForDay(
