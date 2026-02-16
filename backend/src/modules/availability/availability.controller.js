@@ -3,7 +3,7 @@ import { computeAvailability } from './availability.service.js';
 import { generateSlots } from './slot.js';
 
 export async function getAvailability(req, res, next) {
-  try { //use the date format YYYY-MM-DD in req object
+  try { // YYYY-MM-DD
 
    const { resourceId } = req.params;
    const { date } = req. query;

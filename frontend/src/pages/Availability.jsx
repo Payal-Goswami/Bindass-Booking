@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchAvailability } from "../services/availability.api";
-import { createBooking } from "../services/booking.api";
-import { generateDaySlotsUTC, isSlotFree } from "../utils/slots";
-import SlotGrid from "../components/SlotGrid";
+import { fetchAvailability } from "../services/availability.api.js";
+import { createBooking } from "../services/booking.api.js";
+import { generateDaySlotsUTC, isSlotFree } from "../utils/slots.js";
+import SlotGrid from "../components/SlotGrid.jsx";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../auth/supabase";
 import "../styles/Availability.css";

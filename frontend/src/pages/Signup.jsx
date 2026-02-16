@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { signup } from "../auth/auth.api";
+import { signup } from "../auth/auth.api.js";
 import "../styles/Auth.css";
 
 export default function Signup() {

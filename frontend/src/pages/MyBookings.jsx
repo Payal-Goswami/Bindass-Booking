@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../auth/supabase";
-import { fetchMyBookings, cancelBooking } from "../services/myBookings.api";
+import { fetchMyBookings, cancelBooking } from "../services/myBookings.api.js";
 import "../styles/MyBookings.css";
 
 export default function MyBookings() {

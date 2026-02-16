@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchResources } from "../services/resources.api";
-import FilterBar from "../components/FilterBar";
-import ResourceCard from "../components/ResourceCard";
+import { fetchResources } from "../services/resources.api.js";
+import FilterBar from "../components/FilterBar.jsx";
+import ResourceCard from "../components/ResourceCard.jsx";
 import "../styles/Home.css";
 
 export default function Home() {
