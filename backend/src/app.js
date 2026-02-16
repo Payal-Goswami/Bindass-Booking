@@ -8,7 +8,7 @@ import addResourceRoutes from './modules/addResource/addResource.routes.js';
 import { errorHandler } from './middlewares/error.js';
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['https://bindass-booking.vercel.app', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
