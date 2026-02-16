@@ -6,12 +6,13 @@ import MyBookings from "./pages/MyBookings";
 import AddResource from "./pages/AddResource";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
     <>
       <Navbar />
-      <div style={{ padding: "20px" }}>
+      <div style={{ flex: 1, padding: "20px" }}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/availability/:resourceId" element={<Availability />} />
         </Routes>
       </div>
+      <Footer />
     </>
   );
 }
