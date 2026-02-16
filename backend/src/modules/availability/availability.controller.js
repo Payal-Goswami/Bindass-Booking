@@ -18,9 +18,11 @@ export async function getAvailability(req, res, next) {
       });
     }
 
-    const dayStart = new Date(`${date}T09:00:00Z`);
-    const dayEnd   = new Date(`${date}T18:00:00Z`);
+    const dayStart = new Date(`${date}T03:30:00Z`);
+    const dayEnd   = new Date(`${date}T12:30:00Z`);
 
+    console.log("dayStart IST:", dayStart.toLocaleString());
+    console.log("dayEnd IST:", dayEnd.toLocaleString());
 
     const bookings = await getBookingsForDay(
       resourceId,
