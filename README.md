@@ -1,4 +1,4 @@
-# 🔥 Bindass Booking 
+# ✨ Bindass Booking 🎉
 ### Conflict-Free Resource Reservation Platform
 
 Bindass Booking is a full-stack resource reservation system built with the PERN stack (PostgreSQL, Express, React, Node) and Supabase. It guarantees no double booking under concurrent requests using database-level transaction control.
@@ -18,7 +18,7 @@ It allows users to browse resources, check availability, and book time slots sec
 - **Authentication:** Supabase Auth
 - **Deployment:** Vercel (Frontend) & Render (Backend)
 
-## Key Problem Solved
+## 👏 Key Problem Solved
 Many booking systems rely only on frontend validation. Under concurrent requests, this can result in race conditions and double bookings.
 Bindass Booking solves this by implementing database-level locking and transaction-safe operations.
 
