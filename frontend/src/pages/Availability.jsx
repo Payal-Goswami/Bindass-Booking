@@ -117,7 +117,7 @@ export default function Availability() {
   return (
     <div className="availability-card">
       <div className="availability-header">
-        <h2 className="availability-title">Choose Your Slot</h2>
+        <h2 className="availability-title">Select Available Slots</h2>
 
         <input
           type="date"

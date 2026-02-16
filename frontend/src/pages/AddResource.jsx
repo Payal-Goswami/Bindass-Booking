@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../auth/supabase";
 import "../styles/AddResource.css";
-
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 const TYPES = ["ALL", "CORPORATE", "CAMPUS", "LEISURE"];
 
 export default function AddResource() {
@@ -31,7 +31,7 @@ export default function AddResource() {
 
     if (!session) return;
 
-    const res = await fetch("http://localhost:8080/admin/resources", {
+    const res = await fetch(`${API_URL}/admin/resources`, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
       },
