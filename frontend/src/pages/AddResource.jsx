@@ -46,7 +46,7 @@ export default function AddResource() {
       data: { session },
     } = await supabase.auth.getSession();
 
-    await fetch("http://localhost:8080/admin/resources", {
+    await fetch("https://bindass-booking.onrender.com/admin/resources", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function AddResource() {
     const {
       data: { session },
     } = await supabase.auth.getSession();
-    await fetch(`http://localhost:8080/admin/resources/${id}`, {
+    await fetch(`https://bindass-booking.onrender.com/admin/resources/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${session.access_token}`,
@@ -92,7 +92,7 @@ export default function AddResource() {
     const {
       data: { session },
     } = await supabase.auth.getSession();
-    await fetch(`http://localhost:8080/admin/resources/${id}/activate`, {
+    await fetch(`https://bindass-booking.onrender.com/admin/resources/${id}/activate`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${session.access_token}`,
