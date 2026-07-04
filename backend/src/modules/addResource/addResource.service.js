@@ -1,21 +1,6 @@
 import { supabase } from '../../config/supabase.js';
 
-export async function createResource({
-  name,
-  type,
-  capacity,
-  ownerId,
-  description,
-  image
-}) {
-
-  console.log("NAME : ", name);
-  console.log("TYPE : ", type);
-  console.log("CAPACITY : ", capacity);
-  console.log("OWNERID : ", ownerId);
-  console.log("DESC : ", description);
-  console.log("IMAGE : ", image);
-  
+export async function createResource({ name, type, capacity, ownerId, description, image }) {
   const { data, error } = await supabase.rpc('create_resource', {
     p_name: name,
     p_type: type,

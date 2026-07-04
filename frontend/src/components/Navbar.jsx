@@ -1,11 +1,13 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../auth/supabase";
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dbRole, setDbRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,18 +16,20 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
+    if (!user) {
+      setDbRole(null);
+      return;
+    }
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-      },
-    );
-
-    return () => listener.subscription.unsubscribe();
-  }, []);
+    supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) setDbRole(data.role);
+      });
+  }, [user]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -36,11 +40,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link
-          to="/"
-          className="navbar-brand"
-          onClick={() => setMenuOpen(false)}
-        >
+        <Link to="/" className="navbar-brand" onClick={() => setMenuOpen(false)}>
           <span className="brand-primary">Bindass</span>{" "}
           <span className="brand-secondary">Booking</span>
         </Link>
@@ -52,21 +52,13 @@ export default function Navbar() {
         </Link>
 
         {user && (
-          <Link
-            to="/my-bookings"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link to="/my-bookings" className="navbar-link" onClick={() => setMenuOpen(false)}>
             My Bookings
           </Link>
         )}
 
-        {user?.user_metadata?.role === "ADMIN" && (
-          <Link
-            to="/add-resource"
-            className="navbar-link"
-            onClick={() => setMenuOpen(false)}
-          >
+        {dbRole === "ADMIN" && (
+          <Link to="/add-resource" className="navbar-link" onClick={() => setMenuOpen(false)}>
             Admin
           </Link>
         )}
@@ -74,14 +66,13 @@ export default function Navbar() {
         {user ? (
           <div className="navbar-user-mobile">
             <span className="navbar-email">{user.email.split("@")[0]}</span>
-
             <button className="logout-button" onClick={handleLogout}>
               Logout
             </button>
           </div>
         ) : (
           <Link to="/login" className="navbar-link">
-            Login/Register
+            Login / Register
           </Link>
         )}
       </div>

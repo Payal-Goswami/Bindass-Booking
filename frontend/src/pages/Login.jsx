@@ -11,16 +11,20 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     try {
       await login(email, password);
       navigate(redirectTo);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -37,8 +41,8 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="auth-input"
+            disabled={loading}
           />
-
           <input
             type="password"
             placeholder="Password"
@@ -46,20 +50,16 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="auth-input"
+            disabled={loading}
           />
-
-          <button type="submit" className="auth-button">
-            Login
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
         {error && <p className="auth-error">{error}</p>}
-
         <p className="auth-footer">
-          Don’t have an account?{" "}
-          <Link to="/signup" className="auth-link">
-            Signup
-          </Link>
+          Don't have an account?{" "}
+          <Link to="/signup" className="auth-link">Signup</Link>
         </p>
       </div>
     </div>

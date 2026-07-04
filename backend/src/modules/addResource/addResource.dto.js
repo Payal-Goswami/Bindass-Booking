@@ -1,17 +1,34 @@
 export function validateCreateResource(body) {
   const { name, type, capacity } = body;
 
-  if (!name || !type) {
-    throw new Error('Missing required fields');
+  if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    const err = new Error('Resource name is required');
+    err.status = 400;
+    throw err;
   }
 
-  if (capacity && capacity <= 0) {
-    throw new Error('Invalid capacity');
+  if (!type) {
+    const err = new Error('Resource type is required');
+    err.status = 400;
+    throw err;
+  }
+
+  const validTypes = ['ALL', 'CORPORATE', 'CAMPUS', 'LEISURE'];
+  if (!validTypes.includes(type)) {
+    const err = new Error(`Type must be one of: ${validTypes.join(', ')}`);
+    err.status = 400;
+    throw err;
+  }
+
+  if (capacity !== undefined && (isNaN(capacity) || Number(capacity) <= 0)) {
+    const err = new Error('Capacity must be a positive number');
+    err.status = 400;
+    throw err;
   }
 
   return {
-    name,
+    name: name.trim(),
     type,
-    capacity: capacity || 1
+    capacity: capacity ? Number(capacity) : 1
   };
 }

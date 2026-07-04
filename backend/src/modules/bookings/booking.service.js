@@ -1,11 +1,6 @@
 import { supabase } from '../../config/supabase.js';
 
-export async function createBooking({
-  resourceId,
-  userId,
-  startTime,
-  endTime
-}) {
+export async function createBooking({ resourceId, userId, startTime, endTime }) {
   const { data, error } = await supabase.rpc('create_booking', {
     p_resource_id: resourceId,
     p_user_id: userId,

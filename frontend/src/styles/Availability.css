@@ -146,3 +146,54 @@ body {
     max-height: none;
   }
 }
+
+.empty-state-slots {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.booking-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.summary-slot-item {
+  font-size: 13px;
+  color: #0e7490;
+  background: #ecfeff;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.booking-summary-count {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.book-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 600px) {
+  .availability-card {
+    margin: 10px;
+    padding: 16px;
+  }
+
+  .availability-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .date-input {
+    width: 100%;
+  }
+}

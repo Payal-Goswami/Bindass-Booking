@@ -5,22 +5,31 @@ import "../styles/Auth.css";
 
 export default function Signup() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    setLoading(true);
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setLoading(false);
+      return;
+    }
 
     try {
       await signup(email, password);
-      setMessage("Signup successful! Redirecting...");
-      setTimeout(() => navigate("/login"), 1500);
+      setMessage("Account created! Check your email to confirm, then login.");
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -28,7 +37,6 @@ export default function Signup() {
     <div className="auth-page">
       <div className="auth-card">
         <h2 className="auth-title">Create Account ✨</h2>
-
         <form onSubmit={handleSubmit}>
           <input
             type="email"
@@ -37,30 +45,26 @@ export default function Signup() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="auth-input"
+            disabled={loading}
           />
-
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Password (min. 8 characters)"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="auth-input"
+            disabled={loading}
           />
-
-          <button type="submit" className="auth-button">
-            Signup
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Creating account..." : "Signup"}
           </button>
         </form>
-
         {message && <p className="auth-success">{message}</p>}
         {error && <p className="auth-error">{error}</p>}
-
         <p className="auth-footer">
           Already have an account?{" "}
-          <Link to="/login" className="auth-link">
-            Login
-          </Link>
+          <Link to="/login" className="auth-link">Login</Link>
         </p>
       </div>
     </div>

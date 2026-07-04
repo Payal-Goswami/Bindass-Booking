@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Availability from "./pages/Availability";
@@ -17,10 +17,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Home />} />
-          <Route path="/resources/:resourceId" element={<Availability />} />
+          <Route path="/availability/:resourceId" element={<Availability />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/add-resource" element={<AddResource />} />
-          <Route path="/availability/:resourceId" element={<Availability />} />
         </Routes>
       </div>
       <Footer />

@@ -1,15 +1,13 @@
-export function requireRole() {
+export function requireRole(...roles) {
   return (req, res, next) => {
     if (!req.user || !req.user.role) {
-      return res.status(401).json({
-        error: 'Unauthorized'
-      });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    if (req.user.role!='ADMIN') {
-      return res.status(403).json({
-        error: 'Forbidden: No permissions'
-      });
+    const allowed = roles.length > 0 ? roles : ['ADMIN'];
+
+    if (!allowed.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Forbidden: insufficient permissions' });
     }
 
     next();

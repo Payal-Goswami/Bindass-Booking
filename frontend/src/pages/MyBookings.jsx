@@ -1,41 +1,47 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../auth/supabase";
 import { fetchMyBookings, cancelBooking } from "../services/myBookings.api.js";
+import { useAuth } from "../context/AuthContext";
 import "../styles/MyBookings.css";
 
 export default function MyBookings() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
 
-  async function loadBookings() {
-    setLoading(true);
+  useEffect(() => {
+    if (authLoading) return;
 
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      console.log("No session yet, please wait...");
+    if (!user) {
+      navigate("/login", { state: { message: "Please login to view your bookings", redirectTo: "/my-bookings" } });
       return;
     }
 
-    const token = data.session.access_token;
-    const result = await fetchMyBookings(token);
-
-    setBookings(result);
-    setLoading(false);
-  }
-
-  useEffect(() => {
     loadBookings();
-  }, []);
+  }, [user, authLoading]);
 
   useEffect(() => {
     if (!message) return;
-    const timer = setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-
+    const timer = setTimeout(() => setMessage(null), 4000);
     return () => clearTimeout(timer);
   }, [message]);
+
+  async function loadBookings() {
+    setLoading(true);
+    try {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return;
+      const result = await fetchMyBookings(data.session.access_token);
+      setBookings(result);
+    } catch {
+      setMessage({ type: "error", text: "Failed to load bookings" });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleCancel(id) {
     if (!window.confirm("Cancel this booking?")) return;
@@ -44,15 +50,29 @@ export default function MyBookings() {
       const { data } = await supabase.auth.getSession();
       const token = data.session.access_token;
       await cancelBooking(id, token);
-
-      setMessage("Booking cancelled successfully");
+      setMessage({ type: "success", text: "Booking cancelled" });
       loadBookings();
-    } catch (err) {
-      setMessage("Failed to cancel booking");
+    } catch {
+      setMessage({ type: "error", text: "Failed to cancel booking" });
     }
   }
 
-  if (loading) return <p style={{ padding: 20 }}>Loading bookings...</p>;
+  function canCancel(booking) {
+    return booking.status === "CONFIRMED" && new Date(booking.start_time) > new Date();
+  }
+
+  function getStatusClass(status) {
+    const map = {
+      CONFIRMED: "status-confirmed",
+      CANCELLED: "status-cancelled",
+      PENDING: "status-pending",
+    };
+    return map[status] || "status-confirmed";
+  }
+
+  if (authLoading || loading) {
+    return <p style={{ padding: 20, color: "#64748b" }}>Loading bookings...</p>;
+  }
 
   return (
     <div className="mybookings-container">
@@ -60,50 +80,40 @@ export default function MyBookings() {
         <h2 className="mybookings-title">My Bookings</h2>
 
         {message && (
-          <div
-            className={
-              message.includes("Failed")
-                ? "booking-message error"
-                : "booking-message success"
-            }
-          >
-            {message}
+          <div className={`booking-message ${message.type === "error" ? "error" : "success"}`}>
+            {message.text}
           </div>
         )}
 
-        {bookings.length === 0 && (
-          <p style={{ color: "#64748b" }}>No bookings yet</p>
-        )}
+        {bookings.length === 0 ? (
+          <div className="bookings-empty">
+            <p>No bookings yet</p>
+            <span>Browse resources and book your first slot!</span>
+            <button onClick={() => navigate("/")} className="go-home-button">
+              Explore Resources
+            </button>
+          </div>
+        ) : (
+          bookings.map((b) => (
+            <div key={b.id} className="booking-card">
+              <div className="booking-title">{b.resources?.name}</div>
+              <div className="booking-time">
+                {new Date(b.start_time).toLocaleDateString("en-IN", { dateStyle: "medium" })}
+                <br />
+                {new Date(b.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                {" — "}
+                {new Date(b.end_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </div>
+              <span className={`status-badge ${getStatusClass(b.status)}`}>{b.status}</span>
 
-        {bookings.map((b) => (
-          <div key={b.id} className="booking-card">
-            <div className="booking-title">{b.resources?.name}</div>
-
-            <div className="booking-time">
-              {new Date(b.start_time).toLocaleDateString()} <br />
-              {new Date(b.start_time).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              {" - "}
-              {new Date(b.end_time).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {canCancel(b) && (
+                <button className="cancel-button" onClick={() => handleCancel(b.id)}>
+                  Cancel
+                </button>
+              )}
             </div>
-
-            <span className="status-badge status-confirmed">{b.status}</span>
-
-            {b.status === "CONFIRMED" && (
-              <button
-                className="cancel-button"
-                onClick={() => handleCancel(b.id)}
-              >
-                Cancel Booking
-              </button>
-            )}
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
