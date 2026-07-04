@@ -1,13 +1,20 @@
-# Bindass Booking
+# ✨ Bindass Booking 🎉
+### Conflict-Free Resource Reservation Platform
 
-A conflict-free resource reservation platform built with React, Node.js, Express, and PostgreSQL (Supabase).
+Bindass Booking is a full-stack resource reservation system built with the PERN stack (PostgreSQL, Express, React, Node) and Supabase. It guarantees no double booking under concurrent requests using database-level transaction control.
+It allows users to browse resources, check availability, and book time slots securely while preventing race conditions at the database layer.
+
+## 🚀 Live Demo
+- **Frontend:**  [Live Demo](https://bindass-booking.vercel.app)
+- **Backend API:**  [Backend API](https://bindass-booking.onrender.com)
 
 ## Tech Stack
 
-- **Frontend**: React + Vite, deployed on Vercel
-- **Backend**: Node.js + Express.js, deployed on Render
+- **Frontend**: React + Vite
+- **Backend**: Node.js + Express.js
 - **Database**: PostgreSQL via Supabase (with PL/pgSQL stored procedures + row-level locking)
 - **Auth**: Supabase Auth (JWT-based)
+- **Deployment:** Vercel (Frontend) & Render (Backend)
 
 ## Features
 
@@ -22,6 +29,12 @@ A conflict-free resource reservation platform built with React, Node.js, Express
 - Soft-delete for resources
 - Admin resource management panel
 
+### Guarantees:
+- No overlapping bookings
+- No race conditions
+- Atomic slot reservation
+- Strong consistency under concurrent access
+  
 ## Local Setup
 
 ### 1. Clone and install
@@ -53,3 +66,12 @@ npm run dev
 ### Environment variables
 
 See `backend/.env.example` and `frontend/.env.example`.
+
+## 🚀 Future Improvements
+- Pricing & payment integration
+- WebSocket-based real-time slot updates
+- Real-time email/SMS confirmations.
+- Multi-owner resource management
+- Booking analytics dashboard
+
+**Created with 💖 by Payal Goswami**
